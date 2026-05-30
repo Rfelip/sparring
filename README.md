@@ -14,23 +14,8 @@ Active-recall flashcards with **FSRS** scheduling and **KaTeX** math — now a
 checkout (or put the `sparring` launcher on your `PATH`). Then launch
 **Sparring** from your app menu.
 
-No `serve.sh`, no localhost tab. The app opens a real GTK window and runs its
-own static server in-process on a loopback port that starts and dies with it.
-
 **Keys inside the app:** `Space` flip · `1–4` / `J K L ;` rate · `←` undo ·
 `→` skip · `Ctrl+R` reload · `Ctrl+Q` quit · `F11` fullscreen.
-
-## Why it changed
-
-It started life as a browser app you had to serve behind a `./serve.sh`. Three
-things were wrong for daily study use:
-
-1. **Math didn't render** — KaTeX was pulled from a CDN with SRI hashes; offline
-   or on a hash mismatch the script is blocked and no math appears. KaTeX is now
-   **vendored locally** (`web/vendor/katex/`) — works offline, no CDN.
-2. **You had to serve it** — now it's a clickable native window.
-3. **It was a loose page, not a project** — now it has its own repo, build, and
-   packaging.
 
 ## Layout
 
