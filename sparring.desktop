@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=Sparring
+GenericName=Spaced Repetition
+Comment=Active-recall flashcards with FSRS scheduling + KaTeX math
+Exec=sparring
+TryExec=sparring
+Icon=accessories-dictionary
+Terminal=false
+Categories=Education;Science;
+Keywords=flashcards;srs;fsrs;study;spaced-repetition;
+StartupNotify=true

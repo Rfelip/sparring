@@ -1,0 +1,15 @@
+id: demo-5
+deck: demo
+order: 50
+bloco: "C — Beyond math"
+title: "Binary search complexity"
+hard: false
+tags: [cs]
+ref: ""
+front: |
+  What is the time complexity of **binary search** on a sorted array of $n$
+  elements, and what's the precondition?
+back: |
+  $O(\log n)$ comparisons. Precondition: the array must be **sorted** — each
+  step halves the remaining search interval.
+comments: ""

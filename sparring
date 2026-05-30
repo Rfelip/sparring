@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# sparring — launch the native Sparring desktop app.
+# No server to start, no browser tab. Just run this (or click the .desktop entry).
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Defensive: avoid black WebKit viewport on some AMD/Mesa stacks.
+export WEBKIT_DISABLE_DMABUF_RENDERER="${WEBKIT_DISABLE_DMABUF_RENDERER:-1}"
+exec python3 "$DIR/app/sparring_app.py" "$@"

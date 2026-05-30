@@ -1,0 +1,19 @@
+id: demo-1
+deck: demo
+order: 10
+bloco: "A — Using Sparring"
+title: "What is spaced repetition?"
+hard: false
+tags: [intro]
+ref: ""
+front: |
+  What problem does **spaced repetition** solve, and how does Sparring use it?
+back: |
+  Memory decays predictably. Spaced repetition schedules each card to resurface
+  *just before* you'd forget it, so review effort tracks the forgetting curve
+  instead of being spread uniformly.
+
+  Sparring uses **FSRS** (Free Spaced Repetition Scheduler): after you rate a
+  card, FSRS updates that card's difficulty and stability and picks the next due
+  date.
+comments: ""

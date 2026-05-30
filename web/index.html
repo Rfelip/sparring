@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparring — Spaced Repetition</title>
+  <meta name="description" content="Open-source spaced repetition flashcards with FSRS scheduling and KaTeX math support.">
+
+  <!-- KaTeX (math rendering) — vendored locally (web/vendor/katex); works offline, no CDN/SRI fragility -->
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script defer src="vendor/katex/katex.min.js"></script>
+
+  <!-- Lora serif (body) + Inter sans (UI) from Google Fonts — optional, graceful fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- ── Header ──────────────────────────────────────────────────── -->
+    <header class="app-header">
+      <div class="app-logo">
+        Sparring
+        <span>active recall</span>
+      </div>
+
+      <div class="header-spacer"></div>
+
+      <div class="header-actions">
+        <button class="btn-icon" id="btn-stats-nav" title="Estatísticas" aria-label="Ver estatísticas">
+          ◈
+        </button>
+        <button class="btn-icon" id="theme-toggle" title="Trocar tema / Toggle theme" aria-label="Toggle theme">
+          ◐
+        </button>
+        <button class="btn-icon" id="settings-toggle" title="Configurações / Settings" aria-label="Open settings">
+          ⚙
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Main ────────────────────────────────────────────────────── -->
+    <main class="app-main">
+
+      <!-- HOME VIEW — deck list -->
+      <div class="view" id="view-home">
+        <div class="deck-list-header">
+          <h1>Seus decks</h1>
+          <p id="home-status">Carregando decks…</p>
+        </div>
+
+        <ul class="deck-grid" id="deck-grid" role="list">
+          <!-- Deck cards injected by app.js -->
+          <li class="empty-state">
+            <span class="empty-state-icon">⏳</span>
+            <h2>Carregando…</h2>
+          </li>
+        </ul>
+      </div>
+
+      <!-- STUDY VIEW — flashcard + rating -->
+      <div class="view view--hidden" id="view-study">
+
+        <!-- "Now studying" header stripe -->
+        <div class="now-studying-bar" id="now-studying-bar">
+          <span class="now-studying-label">estudando</span>
+          <span class="now-studying-name" id="now-studying-name"></span>
+        </div>
+
+        <!-- Study header: back button + deck name + progress -->
+        <div class="study-header">
+          <button class="btn-back" id="btn-back" aria-label="Voltar à lista de decks">
+            ← voltar
+          </button>
+          <span class="study-deck-name" id="study-deck-name"></span>
+          <div class="study-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="study-progress-fill" id="progress-fill" style="width: 0%"></div>
+          </div>
+          <span class="study-count" id="progress-count">0 / 0</span>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-chip filter-chip--active" data-filter="all" id="filter-all">Todos</button>
+          <button class="filter-chip" data-filter="hard" id="filter-hard">Hard only</button>
+          <button class="filter-chip" data-filter="review" id="filter-review">Só revisão</button>
+          <button class="filter-chip" data-filter="new" id="filter-new">Só novos</button>
+          <div class="filter-sep"></div>
+          <select class="filter-select" id="filter-bloco" title="Filtrar por bloco">
+            <option value="">Bloco: todos</option>
+          </select>
+          <button class="filter-chip filter-chip--sample" id="filter-sample" title="Amostra aleatória de 10 cartões">↺ 10</button>
+          <div class="filter-sep filter-sep--edit"></div>
+          <button class="filter-chip filter-chip--edit" id="filter-edit-mode"
+                  title="Modo edição: criar / editar / apagar cartões" hidden>✎ Editar</button>
+        </div>
+
+        <!-- Edit-mode toolbar (shown only in edit mode, bridge available) -->
+        <div class="edit-toolbar edit-toolbar--hidden" id="edit-toolbar">
+          <span class="edit-toolbar-label">Modo edição</span>
+          <button class="btn-secondary btn-sm" id="btn-edit-current" title="Editar o cartão atual">✎ Editar este</button>
+          <button class="btn-secondary btn-sm" id="btn-new-card" title="Criar um novo cartão">＋ Novo cartão</button>
+          <button class="btn-danger btn-sm" id="btn-delete-current" title="Apagar o cartão atual">🗑 Apagar este</button>
+        </div>
+
+        <!-- Flashcard scene — 3-D flip container -->
+        <div class="flashcard-scene" id="flashcard-scene">
+          <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" role="button" tabindex="0"
+                 aria-label="Pressione Espaço para virar o cartão">
+
+              <!-- FRONT face -->
+              <div class="flashcard-face flashcard-face--front">
+                <div class="flashcard-top">
+                  <span class="flashcard-topic" id="card-topic"></span>
+                  <span class="flashcard-id"    id="card-id"></span>
+                </div>
+                <div class="flashcard-title"   id="card-title"></div>
+                <div class="flashcard-field-label">Frente</div>
+                <div class="flashcard-text"    id="card-front-text"></div>
+                <div class="flashcard-flip-hint" id="card-flip-hint">
+                  · pressione <kbd>Espaço</kbd> para revelar ·
+                </div>
+              </div>
+
+              <!-- BACK face -->
+              <div class="flashcard-face flashcard-face--back">
+                <div class="flashcard-top">
+                  <span class="flashcard-topic flashcard-topic--back" id="card-topic-back"></span>
+                  <span class="flashcard-id" id="card-id-back"></span>
+                </div>
+                <div class="flashcard-title" id="card-title-back"></div>
+                <div class="flashcard-field-label">Verso</div>
+                <div class="flashcard-text" id="card-back-text"></div>
+                <div class="flashcard-ref"  id="card-ref" hidden></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Flip button -->
+        <button class="btn-flip" id="btn-flip">
+          Revelar resposta &nbsp;·&nbsp; <kbd>Espaço</kbd>
+        </button>
+
+        <!-- Rating row (hidden until card is flipped) -->
+        <div class="rating-row rating-row--hidden" id="rating-row">
+          <button class="btn-rating btn-rating--again" data-rating="again" title="Tecla: 1 ou J">
+            <span class="btn-rating-label">De novo</span>
+            <span class="btn-rating-key">1 / J</span>
+          </button>
+          <button class="btn-rating btn-rating--hard" data-rating="hard" title="Tecla: 2 ou K">
+            <span class="btn-rating-label">Difícil</span>
+            <span class="btn-rating-key">2 / K</span>
+          </button>
+          <button class="btn-rating btn-rating--good" data-rating="good" title="Tecla: 3 ou L">
+            <span class="btn-rating-label">Bom</span>
+            <span class="btn-rating-key">3 / L</span>
+          </button>
+          <button class="btn-rating btn-rating--easy" data-rating="easy" title="Tecla: 4 ou ;">
+            <span class="btn-rating-label">Fácil</span>
+            <span class="btn-rating-key">4 / ;</span>
+          </button>
+        </div>
+
+        <!-- Session footer stats -->
+        <div class="session-footer">
+          <span class="session-stat session-stat--again">✗ <span id="stat-again">0</span></span>
+          <span class="session-stat session-stat--hard">⚠ <span id="stat-hard">0</span></span>
+          <span class="session-stat session-stat--good">✓ <span id="stat-good">0</span></span>
+          <span class="session-stat session-stat--easy">★ <span id="stat-easy">0</span></span>
+          <span class="session-stat session-stat--time" id="stat-time">0:00</span>
+        </div>
+
+        <!-- Keyboard hint footer (subtle, dismissible) -->
+        <div class="kb-hint-footer" id="kb-hint-footer">
+          <span class="kb-hint-item"><kbd>Space</kbd> virar</span>
+          <span class="kb-hint-sep">·</span>
+          <span class="kb-hint-item"><kbd>1</kbd>–<kbd>4</kbd> avaliar</span>
+          <span class="kb-hint-sep">·</span>
+          <span class="kb-hint-item"><kbd>←</kbd> desfazer</span>
+          <span class="kb-hint-sep">·</span>
+          <span class="kb-hint-item"><kbd>→</kbd> pular</span>
+          <button class="kb-hint-dismiss" id="kb-hint-dismiss" aria-label="Fechar dica de teclado">✕</button>
+        </div>
+
+      </div><!-- /view-study -->
+
+      <!-- SESSION-END VIEW -->
+      <div class="view view--hidden" id="view-done">
+        <div class="done-card" id="done-card">
+          <div class="done-icon">🎯</div>
+          <h2 id="done-title">Sessão concluída!</h2>
+          <p  id="done-subtitle">Bom trabalho.</p>
+          <div class="done-stats" id="done-stats">
+            <!-- injected by JS -->
+          </div>
+          <div class="done-actions">
+            <button class="btn-primary" id="btn-review-again">Revisar novamente</button>
+            <button class="btn-secondary" id="btn-back-home">← Voltar aos decks</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS VIEW -->
+      <div class="view view--hidden" id="view-stats">
+        <div class="stats-header">
+          <button class="btn-back" id="btn-stats-back" aria-label="Voltar">← voltar</button>
+          <h2 class="stats-title">Estatísticas</h2>
+        </div>
+
+        <!-- Streak + summary bar -->
+        <div class="stats-summary-row" id="stats-summary-row">
+          <!-- injected by JS -->
+        </div>
+
+        <!-- Per-deck breakdown -->
+        <div class="stats-deck-section" id="stats-deck-section">
+          <!-- injected by JS -->
+        </div>
+
+        <!-- Heatmap -->
+        <div class="stats-heatmap-section">
+          <h3 class="stats-section-title">Atividade — últimos 90 dias</h3>
+          <div class="heatmap-scroll">
+            <div class="heatmap" id="heatmap-grid"></div>
+          </div>
+          <div class="heatmap-legend">
+            <span>menos</span>
+            <span class="heatmap-swatch" data-level="0"></span>
+            <span class="heatmap-swatch" data-level="1"></span>
+            <span class="heatmap-swatch" data-level="2"></span>
+            <span class="heatmap-swatch" data-level="3"></span>
+            <span class="heatmap-swatch" data-level="4"></span>
+            <span>mais</span>
+          </div>
+        </div>
+
+        <!-- 7-day forecast -->
+        <div class="stats-forecast-section">
+          <h3 class="stats-section-title">Previsão — próximos 7 dias</h3>
+          <div class="forecast-bars" id="forecast-bars">
+            <!-- injected by JS -->
+          </div>
+        </div>
+      </div>
+
+    </main><!-- /app-main -->
+  </div><!-- /app-shell -->
+
+  <!-- ── Settings Drawer ─────────────────────────────────────────── -->
+  <div class="settings-overlay" id="settings-overlay" aria-hidden="true"></div>
+  <aside class="settings-drawer" id="settings-drawer" aria-hidden="true" role="dialog" aria-label="Configurações">
+    <div class="settings-header">
+      <h2>Configurações</h2>
+      <button class="btn-icon" id="settings-close" aria-label="Fechar configurações">✕</button>
+    </div>
+
+    <div class="settings-body">
+
+      <section class="settings-section">
+        <h3>Aparência</h3>
+        <div class="settings-row">
+          <label for="set-theme">Tema</label>
+          <select class="settings-select" id="set-theme">
+            <option value="lamp">Study Lamp</option>
+            <option value="felt">Felt Table</option>
+            <option value="dark">Dark</option>
+            <option value="sepia">Sepia</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label for="set-language">Idioma dos botões</label>
+          <select class="settings-select" id="set-language">
+            <option value="pt">PT — Português</option>
+            <option value="en">EN — English</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Agenda diária</h3>
+        <div class="settings-row">
+          <label for="set-new-cap">Novos por dia</label>
+          <input class="settings-input" type="number" id="set-new-cap" min="0" max="200" value="10">
+        </div>
+        <div class="settings-row">
+          <label for="set-rev-cap">Revisões por dia</label>
+          <input class="settings-input" type="number" id="set-rev-cap" min="0" max="500" value="50">
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Deck atual</h3>
+        <div class="settings-row settings-row--col">
+          <button class="btn-danger" id="btn-reset-deck">🗑 Resetar progresso do deck</button>
+          <small class="settings-hint" id="reset-deck-hint">Selecione um deck para resetar.</small>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Dados</h3>
+        <div class="settings-row settings-row--col">
+          <button class="btn-secondary" id="btn-export-state">⬇ Exportar estado (JSON)</button>
+          <button class="btn-secondary" id="btn-import-state">⬆ Importar estado (JSON)</button>
+          <input type="file" id="import-file-input" accept=".json" style="display:none">
+        </div>
+      </section>
+
+    </div>
+  </aside>
+
+  <!-- ── Card Editor Modal ───────────────────────────────────────── -->
+  <div class="editor-overlay" id="editor-overlay" aria-hidden="true"></div>
+  <div class="editor-modal" id="editor-modal" aria-hidden="true" role="dialog" aria-label="Editar cartão">
+    <div class="editor-header">
+      <h2 id="editor-title">Editar cartão</h2>
+      <button class="btn-icon" id="editor-close" aria-label="Fechar editor">✕</button>
+    </div>
+    <div class="editor-body">
+      <div class="editor-grid">
+        <label class="editor-field editor-field--wide">
+          <span>Título</span>
+          <input type="text" id="ed-title" class="editor-input" placeholder="Título do cartão">
+        </label>
+        <label class="editor-field">
+          <span>Bloco</span>
+          <input type="text" id="ed-bloco" class="editor-input" placeholder="A — Definição">
+        </label>
+        <label class="editor-field">
+          <span>Ref</span>
+          <input type="text" id="ed-ref" class="editor-input" placeholder="§3">
+        </label>
+        <label class="editor-field">
+          <span>Tags (vírgula)</span>
+          <input type="text" id="ed-tags" class="editor-input" placeholder="definicao, teorema">
+        </label>
+        <label class="editor-field editor-field--check">
+          <input type="checkbox" id="ed-hard"> <span>Difícil (hard)</span>
+        </label>
+      </div>
+      <label class="editor-field editor-field--wide">
+        <span>Frente (markdown + $LaTeX$)</span>
+        <textarea id="ed-front" class="editor-textarea" rows="5" placeholder="Enunciado / pergunta…"></textarea>
+      </label>
+      <label class="editor-field editor-field--wide">
+        <span>Verso</span>
+        <textarea id="ed-back" class="editor-textarea" rows="6" placeholder="Resposta…"></textarea>
+      </label>
+      <label class="editor-field editor-field--wide">
+        <span>Comentários (cartão separado após a resposta)</span>
+        <textarea id="ed-comments" class="editor-textarea" rows="3" placeholder="Notas, erros comuns, contexto…"></textarea>
+      </label>
+      <p class="editor-hint" id="editor-hint"></p>
+    </div>
+    <div class="editor-footer">
+      <button class="btn-secondary" id="editor-copy" title="Copiar YAML para a área de transferência">⧉ Copiar YAML</button>
+      <div class="editor-footer-spacer"></div>
+      <button class="btn-secondary" id="editor-cancel">Cancelar</button>
+      <button class="btn-primary" id="editor-save">Salvar</button>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- file:// protocol warning banner -->
+  <script>
+    if (location.protocol === 'file:') {
+      const banner = document.createElement('div');
+      banner.style.cssText =
+        'position:fixed;bottom:0;left:0;right:0;background:#B03A2E;color:#fff;' +
+        'padding:10px 16px;font-size:13px;z-index:9999;font-family:monospace;';
+      banner.innerHTML =
+        '⚠ <strong>file:// protocol detected.</strong> ' +
+        'Fetch and ES modules won\'t work. ' +
+        'Run <code>./serve.sh</code> and open <a href="http://localhost:7878" ' +
+        'style="color:#FFD6D0">http://localhost:7878</a>.';
+      document.body.appendChild(banner);
+    }
+  </script>
+
+  <!-- App entrypoint — ES module -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

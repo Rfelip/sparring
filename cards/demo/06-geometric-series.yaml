@@ -1,0 +1,15 @@
+id: demo-6
+deck: demo
+order: 60
+bloco: "B — Math renders with KaTeX"
+title: "Sum of a geometric series"
+hard: true
+tags: [math, hard]
+ref: ""
+front: |
+  Derive the closed form of $\sum_{k=0}^{n-1} r^k$ for $r \neq 1$.
+back: |
+  Let $S = \sum_{k=0}^{n-1} r^k$. Then $rS = \sum_{k=1}^{n} r^k$, so
+  $$S - rS = 1 - r^n \;\Rightarrow\; S = \frac{1 - r^n}{1 - r}.$$
+  For $|r| < 1$, letting $n \to \infty$ gives $\sum_{k=0}^{\infty} r^k = \dfrac{1}{1-r}$.
+comments: ""

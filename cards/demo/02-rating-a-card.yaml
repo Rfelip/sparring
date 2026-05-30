@@ -1,0 +1,23 @@
+id: demo-2
+deck: demo
+order: 20
+bloco: "A — Using Sparring"
+title: "How do I rate a card?"
+hard: false
+tags: [intro]
+ref: ""
+front: |
+  You flipped a card and recalled it with some effort. Which rating, and what
+  happens next?
+back: |
+  Press **1–4** (or `J K L ;`):
+
+  - **1 Again** — failed; the card re-enters learning soon.
+  - **2 Hard** — recalled with difficulty; shorter next interval.
+  - **3 Good** — recalled correctly; normal interval growth.
+  - **4 Easy** — effortless; longer next interval.
+
+  `Space` flips, `←` undoes the last rating, `→` skips.
+comments: |
+  Be honest with *Again*. Rating upward to feel productive just means you
+  re-see the card too late and fail it again.

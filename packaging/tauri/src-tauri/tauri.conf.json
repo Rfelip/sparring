@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Sparring",
+  "version": "0.1.0",
+  "identifier": "com.ruanfelipe.sparring",
+  "build": {
+    "frontendDist": "../../../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Sparring",
+        "width": 1100,
+        "height": 820,
+        "minWidth": 720,
+        "minHeight": 560,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$RESOURCE/**"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["appimage", "rpm", "deb"],
+    "category": "Education",
+    "shortDescription": "Active-recall flashcards (FSRS + KaTeX)",
+    "longDescription": "Sparring is a spaced-repetition flashcard study app with FSRS-5 scheduling and KaTeX math rendering. Standalone build: no Python, no toolchain, no internet needed to study.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    }
+  }
+}

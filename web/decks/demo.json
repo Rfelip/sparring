@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "source_file": "cards/demo/",
+    "slug": "demo",
+    "created": "2026-05-30",
+    "tags": [
+      "demo",
+      "sparring"
+    ],
+    "status": "active",
+    "source": "Sparring demo deck",
+    "card_count": 6,
+    "color": "#7A5C38",
+    "lang": "en"
+  },
+  "cards": [
+    {
+      "id": "demo-1",
+      "num": "10",
+      "title": "What is spaced repetition?",
+      "topic": "Using Sparring",
+      "bloco": "A — Using Sparring",
+      "hard": false,
+      "tags": [
+        "intro"
+      ],
+      "refs": [],
+      "front": "What problem does **spaced repetition** solve, and how does Sparring use it?",
+      "back": "Memory decays predictably. Spaced repetition schedules each card to resurface\n*just before* you'd forget it, so review effort tracks the forgetting curve\ninstead of being spread uniformly.\n\nSparring uses **FSRS** (Free Spaced Repetition Scheduler): after you rate a\ncard, FSRS updates that card's difficulty and stability and picks the next due\ndate.",
+      "comments": ""
+    },
+    {
+      "id": "demo-2",
+      "num": "20",
+      "title": "How do I rate a card?",
+      "topic": "Using Sparring",
+      "bloco": "A — Using Sparring",
+      "hard": false,
+      "tags": [
+        "intro"
+      ],
+      "refs": [],
+      "front": "You flipped a card and recalled it with some effort. Which rating, and what\nhappens next?",
+      "back": "Press **1–4** (or `J K L ;`):\n\n- **1 Again** — failed; the card re-enters learning soon.\n- **2 Hard** — recalled with difficulty; shorter next interval.\n- **3 Good** — recalled correctly; normal interval growth.\n- **4 Easy** — effortless; longer next interval.\n\n`Space` flips, `←` undoes the last rating, `→` skips.",
+      "comments": "Be honest with *Again*. Rating upward to feel productive just means you\nre-see the card too late and fail it again."
+    },
+    {
+      "id": "demo-3",
+      "num": "30",
+      "title": "Euler's identity",
+      "topic": "Math renders with KaTeX",
+      "bloco": "B — Math renders with KaTeX",
+      "hard": false,
+      "tags": [
+        "math",
+        "demo"
+      ],
+      "refs": [
+        {
+          "label": "",
+          "value": "Euler"
+        }
+      ],
+      "front": "Write **Euler's identity** and say why it's celebrated.",
+      "back": "$$e^{i\\pi} + 1 = 0$$\n\nIt ties together five fundamental constants --- $e$, $i$, $\\pi$, $1$, and $0$\n--- in a single equation. Inline math like $e^{ix} = \\cos x + i\\sin x$ renders\ntoo.",
+      "comments": ""
+    },
+    {
+      "id": "demo-4",
+      "num": "40",
+      "title": "Bayes' theorem",
+      "topic": "Math renders with KaTeX",
+      "bloco": "B — Math renders with KaTeX",
+      "hard": false,
+      "tags": [
+        "math",
+        "probability"
+      ],
+      "refs": [],
+      "front": "State **Bayes' theorem** for events $A$ and $B$ with $P(B) > 0$.",
+      "back": "$$P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}$$\n\nIt updates a prior $P(A)$ into a posterior $P(A \\mid B)$ after observing $B$.",
+      "comments": ""
+    },
+    {
+      "id": "demo-5",
+      "num": "50",
+      "title": "Binary search complexity",
+      "topic": "Beyond math",
+      "bloco": "C — Beyond math",
+      "hard": false,
+      "tags": [
+        "cs"
+      ],
+      "refs": [],
+      "front": "What is the time complexity of **binary search** on a sorted array of $n$\nelements, and what's the precondition?",
+      "back": "$O(\\log n)$ comparisons. Precondition: the array must be **sorted** — each\nstep halves the remaining search interval.",
+      "comments": ""
+    },
+    {
+      "id": "demo-6",
+      "num": "60",
+      "title": "Sum of a geometric series",
+      "topic": "Math renders with KaTeX",
+      "bloco": "B — Math renders with KaTeX",
+      "hard": true,
+      "tags": [
+        "math",
+        "hard"
+      ],
+      "refs": [],
+      "front": "Derive the closed form of $\\sum_{k=0}^{n-1} r^k$ for $r \\neq 1$.",
+      "back": "Let $S = \\sum_{k=0}^{n-1} r^k$. Then $rS = \\sum_{k=1}^{n} r^k$, so\n$$S - rS = 1 - r^n \\;\\Rightarrow\\; S = \\frac{1 - r^n}{1 - r}.$$\nFor $|r| < 1$, letting $n \\to \\infty$ gives $\\sum_{k=0}^{\\infty} r^k = \\dfrac{1}{1-r}$.",
+      "comments": ""
+    }
+  ]
+}

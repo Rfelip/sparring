@@ -1,0 +1,11 @@
+slug: demo
+name: "Demo — Spaced Repetition Basics"
+icon: "✦"
+color: "#7A5C38"
+tags: [demo, sparring]
+created: 2026-05-30
+status: active
+source: "Sparring demo deck"
+order: 1
+enabled: true
+lang: en

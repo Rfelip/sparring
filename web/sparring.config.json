@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "decks": [
+    {
+      "slug": "demo",
+      "name": "Demo — Spaced Repetition Basics",
+      "path": "cards/demo/",
+      "color": "#7A5C38",
+      "icon": "✦",
+      "tags": [
+        "demo",
+        "sparring"
+      ],
+      "enabled": true
+    }
+  ],
+  "schedule": {
+    "new_cards_per_day": 10,
+    "review_cap_per_day": 50,
+    "learn_ahead_minutes": 20,
+    "timezone": "UTC"
+  },
+  "fsrs": {
+    "desired_retention": 0.9,
+    "maximum_interval": 36500,
+    "w": null
+  },
+  "ui": {
+    "theme": "lamp",
+    "language": "pt",
+    "show_card_id": true,
+    "show_ref": true,
+    "show_hint_button": true,
+    "show_bloco": true,
+    "rating_labels": {
+      "again": "De novo",
+      "hard": "Difícil",
+      "good": "Bom",
+      "easy": "Fácil"
+    },
+    "keyboard_shortcuts": {
+      "flip": "Space",
+      "again": "1",
+      "hard": "2",
+      "good": "3",
+      "easy": "4"
+    }
+  }
+}

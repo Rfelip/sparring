@@ -1,0 +1,15 @@
+id: demo-4
+deck: demo
+order: 40
+bloco: "B — Math renders with KaTeX"
+title: "Bayes' theorem"
+hard: false
+tags: [math, probability]
+ref: ""
+front: |
+  State **Bayes' theorem** for events $A$ and $B$ with $P(B) > 0$.
+back: |
+  $$P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B)}$$
+
+  It updates a prior $P(A)$ into a posterior $P(A \mid B)$ after observing $B$.
+comments: ""

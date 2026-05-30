@@ -1,0 +1,17 @@
+id: demo-3
+deck: demo
+order: 30
+bloco: "B — Math renders with KaTeX"
+title: "Euler's identity"
+hard: false
+tags: [math, demo]
+ref: "Euler"
+front: |
+  Write **Euler's identity** and say why it's celebrated.
+back: |
+  $$e^{i\pi} + 1 = 0$$
+
+  It ties together five fundamental constants --- $e$, $i$, $\pi$, $1$, and $0$
+  --- in a single equation. Inline math like $e^{ix} = \cos x + i\sin x$ renders
+  too.
+comments: ""
